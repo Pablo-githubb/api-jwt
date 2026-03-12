@@ -45,14 +45,16 @@ void main() {
   });
 
   group('ProductVM', () {
-    test('initial state has empty products list', () {
+    // Comprova que l'estat inicial te llista buida, sense carrega ni error
+    test('estat inicial buit', () {
       expect(productVM.products, isEmpty);
       expect(productVM.isLoading, isFalse);
       expect(productVM.errorMessage, isNull);
     });
 
     group('afegirProducte', () {
-      test('adds product and updates list on success', () async {
+      // Comprova que afegeix producte i actualitza la llista correctament
+      test('afegeix producte i actualitza llista', () async {
         final createdProduct = Product(
           userId: 'u1',
           id: 1,
@@ -72,7 +74,8 @@ void main() {
         expect(productVM.errorMessage, isNull);
       });
 
-      test('sets errorMessage on failure', () async {
+      // Comprova que estableix missatge d'error si falla
+      test('error al crear producte', () async {
         mockProductRepository.exceptionToThrow =
             Exception('Failed to create');
 
@@ -83,7 +86,8 @@ void main() {
         expect(productVM.isLoading, isFalse);
       });
 
-      test('sets isLoading to false after completion', () async {
+      // Comprova que isLoading es false despres de completar
+      test('isLoading false despres de crear', () async {
         final product = Product(
           userId: '',
           id: 1,
@@ -100,7 +104,8 @@ void main() {
         expect(productVM.isLoading, isFalse);
       });
 
-      test('notifies listeners during the process', () async {
+      // Comprova que notifica als listeners durant el proces
+      test('notifica listeners al crear', () async {
         final product = Product(
           userId: '',
           id: 1,
@@ -117,11 +122,12 @@ void main() {
 
         await productVM.afegirProducte('T', 'D', 1.0);
 
-        // Should notify at least twice: start (isLoading=true) and end (isLoading=false)
+        // Ha de notificar minim 2 cops: inici (isLoading=true) i fi (isLoading=false)
         expect(notifyCount, greaterThanOrEqualTo(2));
       });
 
-      test('creates product with empty userId and id 0', () async {
+      // Comprova que crea producte amb userId buit i id 0
+      test('crea producte amb userId buit i id 0', () async {
         final createdProduct = Product(
           userId: 'server-assigned',
           id: 99,
@@ -145,7 +151,8 @@ void main() {
     });
 
     group('eliminarProducte', () {
-      test('removes product from list on success', () async {
+      // Comprova que elimina producte de la llista correctament
+      test('elimina producte de la llista', () async {
         productVM.products = [
           Product(
             userId: 'u1',
@@ -173,13 +180,15 @@ void main() {
         expect(productVM.errorMessage, isNull);
       });
 
-      test('calls repository with correct id', () async {
+      // Comprova que crida el repositori amb l'id correcte
+      test('crida repositori amb id correcte', () async {
         await productVM.eliminarProducte(42);
 
         expect(mockProductRepository.lastDeletedId, 42);
       });
 
-      test('sets errorMessage on failure', () async {
+      // Comprova que estableix missatge d'error si falla
+      test('error al eliminar producte', () async {
         mockProductRepository.exceptionOnDelete =
             Exception('Delete failed');
 
@@ -190,13 +199,15 @@ void main() {
         expect(productVM.isLoading, isFalse);
       });
 
-      test('sets isLoading to false after completion', () async {
+      // Comprova que isLoading es false despres d'eliminar
+      test('isLoading false al eliminar', () async {
         await productVM.eliminarProducte(1);
 
         expect(productVM.isLoading, isFalse);
       });
 
-      test('notifies listeners', () async {
+      // Comprova que notifica als listeners
+      test('notifica listeners al eliminar', () async {
         int notifyCount = 0;
         productVM.addListener(() => notifyCount++);
 
@@ -207,7 +218,8 @@ void main() {
     });
 
     group('llistarProductes', () {
-      test('loads products from repository', () async {
+      // Comprova que carrega productes del repositori
+      test('carrega productes del repositori', () async {
         mockProductRepository.productsToReturn = [
           Product(
             userId: 'u1',
@@ -236,7 +248,8 @@ void main() {
         expect(productVM.errorMessage, isNull);
       });
 
-      test('handles empty product list', () async {
+      // Comprova que gestiona llista buida correctament
+      test('llista buida sense productes', () async {
         mockProductRepository.productsToReturn = [];
 
         await productVM.llistarProductes();
@@ -245,7 +258,8 @@ void main() {
         expect(productVM.isLoading, isFalse);
       });
 
-      test('sets errorMessage on failure', () async {
+      // Comprova que estableix missatge d'error si falla
+      test('error al carregar productes', () async {
         mockProductRepository.exceptionOnGet =
             Exception('Failed to load products');
 
@@ -256,7 +270,8 @@ void main() {
         expect(productVM.isLoading, isFalse);
       });
 
-      test('notifies listeners', () async {
+      // Comprova que notifica als listeners
+      test('notifica listeners al llistar', () async {
         mockProductRepository.productsToReturn = [];
 
         int notifyCount = 0;

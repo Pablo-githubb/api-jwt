@@ -16,10 +16,14 @@ class ProductService implements IProductService {
   static const String _apiKey =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0dnl2dnhvbm5zZG9xb2t2aWt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODE1NTQsImV4cCI6MjA4MTA1NzU1NH0.6AxDj1flnnqtBvOjoKe9_MehqBwo0kNgxLGOf4VKQ5A';
 
+  final http.Client _client;
+
+  ProductService({http.Client? client}) : _client = client ?? http.Client();
+
   @override
   /// Envia una petició POST per crear un nou producte a Supabase.
   Future<Product> crearProducte(String token, Product product) async {
-    final response = await http.post(
+    final response = await _client.post(
       Uri.parse(_appUrl),
       //Aquest són els headers demanats a l'enunciat per a les capçaleres addicionals del Supabase
       headers: {
@@ -46,7 +50,7 @@ class ProductService implements IProductService {
   @override
   /// Obté la llista de productes des de l'API de Supabase.
   Future<List<Product>> getProducts(String token) async {
-    final response = await http.get(
+    final response = await _client.get(
       Uri.parse('$_appUrl?select=*'),
       headers: {'apikey': _apiKey, 'Authorization': 'Bearer $token'},
     );
@@ -62,7 +66,7 @@ class ProductService implements IProductService {
   @override
   /// Envia una petició DELETE per eliminar un producte identificat per [id].
   Future<void> eliminarProducte(String token, int id) async {
-    final response = await http.delete(
+    final response = await _client.delete(
       Uri.parse('$_appUrl?id=eq.$id'),
       headers: {'apikey': _apiKey, 'Authorization': 'Bearer $token'},
     );

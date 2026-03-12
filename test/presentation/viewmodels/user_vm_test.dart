@@ -42,14 +42,16 @@ void main() {
   });
 
   group('UserVM', () {
-    test('initial state is not authenticated', () {
+    // Comprova que l'estat inicial no esta autenticat
+    test('estat inicial sense autenticacio', () {
       expect(userVM.authenticated, isFalse);
       expect(userVM.email, '');
       expect(userVM.password, '');
     });
 
     group('login', () {
-      test('sets currentUser on successful login', () async {
+      // Comprova que estableix currentUser amb login correcte
+      test('login correcte estableix currentUser', () async {
         mockUserRepository.userToReturn = User(
           email: 'test@test.com',
           password: 'secret',
@@ -66,7 +68,8 @@ void main() {
         expect(userVM.password, 'secret');
       });
 
-      test('passes controller text to repository', () async {
+      // Comprova que passa el text dels controllers al repositori
+      test('envia credencials al repositori', () async {
         mockUserRepository.userToReturn = User(
           email: 'a@b.com',
           password: 'pass',
@@ -82,19 +85,21 @@ void main() {
         expect(mockUserRepository.lastPassword, 'pass');
       });
 
-      test('handles login exception gracefully (does not crash)', () async {
+      // Comprova que gestiona excepcio sense petar
+      test('error login no peta', () async {
         mockUserRepository.exceptionToThrow =
             Exception('Invalid credentials');
         userVM.emailController.text = 'bad@email.com';
         userVM.passwordController.text = 'wrong';
 
-        // Should not throw
+        // No ha de llancar excepcio
         await userVM.login();
 
         expect(userVM.authenticated, isFalse);
       });
 
-      test('notifies listeners on successful login', () async {
+      // Comprova que notifica als listeners amb login correcte
+      test('notifica listeners al login', () async {
         mockUserRepository.userToReturn = User(
           email: 'x@y.com',
           password: '',
@@ -114,8 +119,9 @@ void main() {
     });
 
     group('logout', () {
-      test('resets authenticated to false after logout', () async {
-        // First login
+      // Comprova que reseteja autenticacio despres de logout
+      test('logout reseteja autenticacio', () async {
+        // Primer login
         mockUserRepository.userToReturn = User(
           email: 'test@test.com',
           password: '',
@@ -127,14 +133,15 @@ void main() {
         await userVM.login();
         expect(userVM.authenticated, isTrue);
 
-        // Then logout
+        // Despres logout
         await userVM.logout();
 
         expect(userVM.authenticated, isFalse);
         expect(userVM.email, '');
       });
 
-      test('notifies listeners on logout', () async {
+      // Comprova que notifica als listeners al fer logout
+      test('notifica listeners al logout', () async {
         mockUserRepository.userToReturn = User(
           email: 'x@y.com',
           password: '',
@@ -155,7 +162,8 @@ void main() {
     });
 
     group('controllers', () {
-      test('emailController and passwordController are initialized', () {
+      // Comprova que els controllers estan inicialitzats i buits
+      test('controllers inicialitzats buits', () {
         expect(userVM.emailController, isNotNull);
         expect(userVM.passwordController, isNotNull);
         expect(userVM.emailController.text, '');

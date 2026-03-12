@@ -69,7 +69,8 @@ void main() {
   });
 
   group('ProductRepository', () {
-    test('afegirProducte calls service with correct token and returns result', () async {
+    // Comprova que afegirProducte envia el token correcte i retorna el producte creat
+    test('afegirProducte amb token i resultat', () async {
       final product = _makeProduct(title: 'Test', price: 10.0, desc: 'Desc');
       mockService.productToReturn = _makeProduct(id: 1, title: 'Test', price: 10.0, desc: 'Desc');
 
@@ -81,13 +82,15 @@ void main() {
       expect(result.title, 'Test');
     });
 
-    test('afegirProducte throws when service throws', () {
+    // Comprova que afegirProducte llança excepció si el servei falla
+    test('afegirProducte error del servei', () {
       mockService.exceptionToThrow = Exception('Create failed');
 
       expect(() => repo.afegirProducte(_makeProduct()), throwsA(isA<Exception>()));
     });
 
-    test('getProducts returns list from service and handles empty', () async {
+    // Comprova que getProducts retorna la llista i gestiona llista buida
+    test('getProducts llista i llista buida', () async {
       mockService.productsToReturn = [
         _makeProduct(id: 1, title: 'P1'),
         _makeProduct(id: 2, title: 'P2'),
@@ -104,20 +107,23 @@ void main() {
       expect(await repo.getProducts(), isEmpty);
     });
 
-    test('getProducts throws when service throws', () {
+    // Comprova que getProducts llança excepció si el servei falla
+    test('getProducts error del servei', () {
       mockService.exceptionToThrow = Exception('Load failed');
 
       expect(() => repo.getProducts(), throwsA(isA<Exception>()));
     });
 
-    test('eliminarProducte calls service with correct token and id', () async {
+    // Comprova que eliminarProducte envia token i id correctes
+    test('eliminarProducte amb token i id', () async {
       await repo.eliminarProducte(42);
 
       expect(mockService.lastToken, 'test-jwt-token');
       expect(mockService.lastDeletedId, 42);
     });
 
-    test('eliminarProducte throws when service throws', () {
+    // Comprova que eliminarProducte llança excepció si el servei falla
+    test('eliminarProducte error del servei', () {
       mockService.exceptionToThrow = Exception('Delete failed');
 
       expect(() => repo.eliminarProducte(1), throwsA(isA<Exception>()));

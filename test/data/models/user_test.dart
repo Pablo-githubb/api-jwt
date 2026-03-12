@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('User', () {
-    test('constructor creates User with all fields', () {
+    test('Constructor crea User', () {
       final user = User(email: 'hello@world.com', password: 'p@ss', authenticated: false, accessToken: 'tok');
 
       expect(user.email, 'hello@world.com');
@@ -12,8 +12,7 @@ void main() {
       expect(user.accessToken, 'tok');
     });
 
-    test('fromJson parses Supabase format (with and without email)', () {
-      // Complete Supabase response
+    test('Convertir JSON en Supabase', () {
       final user = User.fromJson({
         'access_token': 'my-jwt-token',
         'user': {'email': 'test@example.com', 'id': 'some-uuid'},
@@ -28,7 +27,7 @@ void main() {
       expect(noEmail.email, '');
       expect(noEmail.authenticated, isTrue);
 
-      // Supabase format takes priority over alternative fields
+      // Format Supabase
       final priority = User.fromJson({
         'access_token': 'supabase-token',
         'user': {'email': 'supabase@test.com'},
@@ -41,7 +40,7 @@ void main() {
       expect(priority.password, '');
     });
 
-    test('fromJson parses alternative format with email, password, accessToken', () {
+    test('Conversio JSON a Supabase (email, password, accesToken)', () {
       final user = User.fromJson({'email': 'user@test.com', 'password': 'secret123', 'accessToken': 'alt-token'});
 
       expect(user.email, 'user@test.com');
@@ -50,7 +49,7 @@ void main() {
       expect(user.accessToken, 'alt-token');
     });
 
-    test('fromJson throws FormatException for invalid structures', () {
+    test('Estructura incorrecta JSON', () {
       expect(() => User.fromJson({'email': 'user@test.com'}), throwsA(isA<FormatException>()));
       expect(() => User.fromJson(<String, dynamic>{}), throwsA(isA<FormatException>()));
       expect(() => User.fromJson({'email': 'test@test.com', 'password': 'pass'}), throwsA(isA<FormatException>()));

@@ -138,7 +138,8 @@ void main() {
       productRepo = MockProductRepository();
     });
 
-    testWidgets('renders form fields and login button', (tester) async {
+    // Comprova que es mostren els camps del formulari i el boto de login
+    testWidgets('mostra formulari i boto login', (tester) async {
       await tester.pumpWidget(_loginApp(userRepo, productRepo));
 
       expect(find.byType(TextField), findsNWidgets(2));
@@ -149,7 +150,8 @@ void main() {
       expect(find.textContaining('You are logged in as:'), findsNothing);
     });
 
-    testWidgets('can enter text and login successfully', (tester) async {
+    // Comprova que es pot escriure text i fer login correctament
+    testWidgets('escriure text i login correcte', (tester) async {
       await tester.pumpWidget(_loginApp(userRepo, productRepo));
 
       await tester.enterText(find.widgetWithText(TextField, 'Introduix el email'), 'user@test.com');
@@ -175,7 +177,8 @@ void main() {
       productRepo = MockProductRepository();
     });
 
-    testWidgets('renders form with AppBar, fields and button', (tester) async {
+    // Comprova que es mostra AppBar, camps i boto de creacio
+    testWidgets('mostra formulari amb AppBar i camps', (tester) async {
       await tester.pumpWidget(_creationApp(productRepo));
 
       expect(find.text('Nou Producte'), findsOneWidget);
@@ -186,7 +189,8 @@ void main() {
       expect(find.byType(ElevatedButton), findsOneWidget);
     });
 
-    testWidgets('validates empty fields on submit', (tester) async {
+    // Comprova validacio de camps buits al enviar
+    testWidgets('valida camps buits', (tester) async {
       await tester.pumpWidget(_creationApp(productRepo));
 
       // Empty title
@@ -213,7 +217,8 @@ void main() {
       expect(find.text('Si us plau, introdueix un número vàlid'), findsOneWidget);
     });
 
-    testWidgets('creates product, shows snackbar and clears fields', (tester) async {
+    // Comprova que crea producte, mostra snackbar i neteja camps
+    testWidgets('crea producte i neteja camps', (tester) async {
       productRepo.productToReturn = _makeProduct(title: 'New', price: 10.0, desc: 'Desc');
       productRepo.productsToReturn = [productRepo.productToReturn!];
 
@@ -231,7 +236,8 @@ void main() {
       expect(titleField.controller?.text, '');
     });
 
-    testWidgets('can enter text in all form fields', (tester) async {
+    // Comprova que es pot escriure text a tots els camps
+    testWidgets('escriure text als camps', (tester) async {
       await tester.pumpWidget(_creationApp(productRepo));
 
       await tester.enterText(find.byType(TextFormField).at(0), 'Test Title');
@@ -253,7 +259,8 @@ void main() {
       productRepo = MockProductRepository();
     });
 
-    testWidgets('shows products with title, subtitle and delete icon', (tester) async {
+    // Comprova que mostra productes amb titol, subtitol i icona esborrar
+    testWidgets('mostra productes amb detalls', (tester) async {
       productRepo.productsToReturn = [
         _makeProduct(id: 1, title: 'Product A', price: 10.0, desc: 'Desc A'),
         _makeProduct(id: 2, title: 'Product B', price: 20.5, desc: 'Desc B'),
@@ -270,7 +277,8 @@ void main() {
       expect(find.byIcon(Icons.delete), findsNWidgets(2));
     });
 
-    testWidgets('tapping delete calls eliminarProducte', (tester) async {
+    // Comprova que tocar esborrar crida eliminarProducte
+    testWidgets('esborrar crida eliminarProducte', (tester) async {
       productRepo.productsToReturn = [_makeProduct(id: 42, title: 'To Delete')];
 
       await tester.pumpWidget(_listApp(productRepo));
@@ -282,14 +290,16 @@ void main() {
       expect(productRepo.lastDeletedId, 42);
     });
 
-    testWidgets('shows empty list when no products', (tester) async {
+    // Comprova que mostra llista buida sense productes
+    testWidgets('llista buida sense productes', (tester) async {
       await tester.pumpWidget(_listApp(productRepo));
       await tester.pumpAndSettle();
 
       expect(find.byType(ListTile), findsNothing);
     });
 
-    testWidgets('shows error message when loading fails', (tester) async {
+    // Comprova que mostra missatge d'error si falla la carrega
+    testWidgets('mostra error si falla carrega', (tester) async {
       productRepo.exceptionToThrow = Exception('Network error');
 
       await tester.pumpWidget(_listApp(productRepo));
@@ -301,7 +311,8 @@ void main() {
 
   // ===== MainArea =====
   group('MainArea', () {
-    testWidgets('renders child in Expanded with primaryContainer color', (tester) async {
+    // Comprova que renderitza fill dins Expanded amb color primaryContainer
+    testWidgets('renderitza fill amb Expanded i color', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)),
@@ -328,13 +339,15 @@ void main() {
       productRepo = MockProductRepository();
     });
 
-    testWidgets('shows LoginPage when not authenticated', (tester) async {
+    // Comprova que mostra LoginPage si no esta autenticat
+    testWidgets('mostra LoginPage sense autenticacio', (tester) async {
       await _pumpHome(tester, userRepo: userRepo, productRepo: productRepo, width: 800, height: 600, authenticated: false);
 
       expect(find.byType(LoginPage), findsOneWidget);
     });
 
-    testWidgets('wide layout: extended NavigationRail with correct destinations and default page', (tester) async {
+    // Comprova layout ample: NavigationRail estes amb destinacions correctes
+    testWidgets('layout ample: NavigationRail estes', (tester) async {
       await _pumpHome(tester, userRepo: userRepo, productRepo: productRepo, width: 800, height: 600);
 
       expect(find.byType(ProductCreationPage), findsOneWidget);
@@ -353,7 +366,8 @@ void main() {
       expect(find.byIcon(Icons.logout), findsOneWidget);
     });
 
-    testWidgets('medium layout: non-extended NavigationRail', (tester) async {
+    // Comprova layout mitja: NavigationRail no estes
+    testWidgets('layout mitja: NavigationRail compacte', (tester) async {
       await _pumpHome(tester, userRepo: userRepo, productRepo: productRepo, width: 500, height: 600);
 
       expect(find.byType(NavigationRail), findsOneWidget);
@@ -361,7 +375,8 @@ void main() {
       expect(rail.extended, isFalse);
     });
 
-    testWidgets('narrow layout: NavigationBar with correct destinations', (tester) async {
+    // Comprova layout estret: NavigationBar amb destinacions
+    testWidgets('layout estret: NavigationBar', (tester) async {
       await _pumpHome(tester, userRepo: userRepo, productRepo: productRepo, width: 400, height: 800);
 
       expect(find.byType(NavigationBar), findsOneWidget);
@@ -371,7 +386,8 @@ void main() {
       expect(find.text('Sortir'), findsOneWidget);
     });
 
-    testWidgets('NavigationRail: navigate between pages', (tester) async {
+    // Comprova navegacio entre pagines amb NavigationRail
+    testWidgets('NavigationRail: navegar entre pagines', (tester) async {
       await _pumpHome(tester, userRepo: userRepo, productRepo: productRepo, width: 800, height: 600);
 
       // Go to list
@@ -386,7 +402,8 @@ void main() {
       expect(find.byType(ProductCreationPage), findsOneWidget);
     });
 
-    testWidgets('NavigationRail: logout returns to LoginPage', (tester) async {
+    // Comprova que logout torna a LoginPage amb NavigationRail
+    testWidgets('NavigationRail: logout torna a LoginPage', (tester) async {
       await _pumpHome(tester, userRepo: userRepo, productRepo: productRepo, width: 800, height: 600);
 
       await tester.tap(find.text('Logout'));
@@ -396,7 +413,8 @@ void main() {
       expect(find.byType(NavigationRail), findsNothing);
     });
 
-    testWidgets('NavigationBar: navigate and logout on narrow', (tester) async {
+    // Comprova navegacio i logout amb NavigationBar (layout estret)
+    testWidgets('NavigationBar: navegar i logout', (tester) async {
       await _pumpHome(tester, userRepo: userRepo, productRepo: productRepo, width: 400, height: 800);
 
       // Navigate to list
@@ -411,7 +429,8 @@ void main() {
       expect(find.byType(NavigationBar), findsNothing);
     });
 
-    testWidgets('logout resets to creation page after re-login', (tester) async {
+    // Comprova que logout reseteja a pagina creacio despres de re-login
+    testWidgets('logout reseteja a creacio post re-login', (tester) async {
       await _pumpHome(tester, userRepo: userRepo, productRepo: productRepo, width: 800, height: 600);
 
       // Navigate to list, then logout

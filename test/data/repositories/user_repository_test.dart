@@ -32,7 +32,8 @@ void main() {
   });
 
   group('UserRepository', () {
-    test('authenticated: false initially, true/false after login depending on flag', () async {
+    // Comprova que authenticated és false inicialment i canvia segons el login
+    test('authenticated: estat inicial i post-login', () async {
       expect(repo.authenticated, isFalse);
 
       mockService.userToReturn = _makeUser(authenticated: true);
@@ -45,7 +46,8 @@ void main() {
       expect(repo.authenticated, isFalse);
     });
 
-    test('email: throws when no user, returns User after login', () async {
+    // Comprova que email llança excepció sense usuari i retorna User després de login
+    test('email: error sense login, ok amb login', () async {
       expect(() => repo.email, throwsA(isA<Exception>()));
 
       mockService.userToReturn = _makeUser(email: 'john@example.com', token: 'my-token');
@@ -56,7 +58,8 @@ void main() {
       expect(result.accessToken, 'my-token');
     });
 
-    test('validateLogin delegates to service and returns User', () async {
+    // Comprova que validateLogin delega al servei i retorna l'usuari
+    test('validateLogin delega al servei', () async {
       mockService.userToReturn = _makeUser(email: 'a@b.com', token: 'tok');
 
       final result = await repo.validateLogin('a@b.com', 'mypassword');
@@ -67,7 +70,8 @@ void main() {
       expect(result.accessToken, 'tok');
     });
 
-    test('validateLogin throws when service throws', () {
+    // Comprova que validateLogin llança excepció si el servei falla
+    test('validateLogin error del servei', () {
       mockService.exceptionToThrow = Exception('Invalid credentials');
 
       expect(() => repo.validateLogin('a@b.com', 'wrong'), throwsA(isA<Exception>()));
